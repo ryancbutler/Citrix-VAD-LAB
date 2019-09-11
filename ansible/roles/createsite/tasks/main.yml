@@ -1,0 +1,21 @@
+---
+  - name: Create or Join Site
+    script: files/createsite.ps1
+    args:
+      creates: C:\Logs\sitedone.txt
+    environment:
+      SiteName: "{{ SiteName }}"
+      DatabaseServer: "{{ hostvars[groups['sql.0'][0]]['ansible_fqdn'] }}"
+      DatabaseServerPort: "{{ DatabaseServerPort }}"
+      DatabaseName_Site: "{{ DatabaseName_Site }}"
+      DatabaseName_Logging: "{{ DatabaseName_Logging }}"
+      DatabaseName_Monitoring: "{{ DatabaseName_Monitoring }}"
+      LicenseServer: "{{ hostvars[groups['sql.0'][0]]['ansible_fqdn'] }}"
+      LicenseServerPort: "{{ LicenseServerPort }}"
+      LicensingModel: "{{ LicensingModel }}"                  
+      ProductCode: "{{ ProductCode }}"                                   
+      ProductEdition: "{{ ProductEdition }}"
+      AdminGroup: "{{ AdminGroup }}"
+      Role:  "{{ Role }}"
+      Scope: "{{ Scope }}"                                 
+      GroomingDays: "{{ GroomingDays }}"

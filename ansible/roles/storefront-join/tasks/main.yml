@@ -1,0 +1,18 @@
+---
+- name: Create task to run a PS script as SYSTEM service
+  win_scheduled_task:
+    name: Join SF Cluster
+    description: Run a PowerShell script
+    actions:
+    - path: C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe
+      arguments: -ExecutionPolicy Unrestricted -NonInteractive -File "C:\Program Files\Citrix\Receiver StoreFront\PowerShellSDK\Examples\MultiServerJoinGroup.ps1" -Server "{{ hostvars[groups['storefront.0'][0]]['ansible_hostname'] }}" -Passcode {{ hostvars[groups['storefront.0'][0]].passcode['content'] | b64decode }}
+    username: SYSTEM
+    run_level: highest
+    state: present
+- name: Storefront folder stat
+  win_stat:
+    path: C:\inetpub\wwwroot\Citrix
+  register: sf_info
+- name: Start Join Task
+  win_shell: Start-ScheduledTask -TaskName "Join SF Cluster"
+  when: sf_info.stat.exists == False

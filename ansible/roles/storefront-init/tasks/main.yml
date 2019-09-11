@@ -1,0 +1,44 @@
+---
+- name: Create SF Vars
+  script: createsfvars.ps1
+  args:
+    creates: C:\Logs\sf-vars.xml
+  environment:
+    HostbaseUrl: "{{ HostbaseUrl }}"
+    FarmServers: "{{ FarmServers }}"
+    StoreVirtualPath: "{{ StoreVirtualPath }}"
+    TransportType: "{{ TransportType }}"
+    GatewayUrl: "{{ GatewayUrl }}"
+    GatewaySTAUrls: "{{ GatewaySTAUrls }}"
+    GatewayName: "{{ GatewayName }}"
+- name: Copy a Storefront script file
+  win_copy:
+    src: createsfsite.ps1
+    dest: C:\Windows\Temp\
+- name: Create task to run a PS script as SYSTEM service
+  win_scheduled_task:
+    name: Create SF Cluster
+    description: Run a PowerShell script
+    actions:
+    - path: C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe
+      arguments: -ExecutionPolicy Unrestricted -File C:\Windows\Temp\createsfsite.ps1
+    username: SYSTEM
+    run_level: highest
+    state: present
+- name: Storefront folder stat
+  win_stat:
+    path: C:\inetpub\wwwroot\Citrix
+  register: sf_info
+- name: Start Create task
+  win_shell: Start-ScheduledTask -TaskName "Create SF Cluster"
+  when: sf_info.stat.exists == False
+- name: Wait for passcode file
+  win_wait_for:
+    path: C:\Logs\passcode.txt
+    delay: 10
+  when: sf_info.stat.exists == False
+- name: Slurp passcode file
+  slurp:
+    src: C:\Logs\passcode.txt
+  register: passcode
+- debug: msg="{{ passcode['content'] | b64decode | trim }}"

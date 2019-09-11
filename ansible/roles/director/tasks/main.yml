@@ -1,0 +1,60 @@
+---
+- name: Install Director Pre-Reqs
+  win_feature:
+    name:
+    - NET-Framework-45-Core
+    state: present
+  register: win_feature
+
+- name: Reboot if features require
+  win_reboot:
+  when: win_feature.reboot_required
+
+- name: Create Log Folder
+  win_file:
+    path: C:\Logs
+    state: directory
+
+- name: Install Director Components
+  win_package:
+    path: "{{ citrix_path }}\\x64\\XenDesktop Setup\\XenDesktopServerSetup.exe"
+    #arguments: /components controller,desktopstudio /configure_firewall /nosql /noreboot /quiet /logpath C:\Logs /IGNORE_HW_CHECK_FAILURE
+    arguments: /components desktopdirector /configure_firewall /nosql /noreboot /quiet /logpath C:\Logs
+    state: present
+    expected_return_code: [0, 3, 3010]
+    creates_path: C:\inetpub\wwwroot\Director
+  register: director_install
+
+- name: Reboot after Director
+  win_reboot:
+  when: director_install.changed
+
+- name: Remove Director RunOnce Key
+  win_regedit:
+    path: HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce
+    name: "!XenDesktopSetup"
+    state: absent
+  register: director_resume
+
+- name: Resume Director Install
+  win_package:
+    path: C:\ProgramData\Citrix\XenDesktopSetup\XenDesktopServerSetup.exe
+    state: present
+    expected_return_code: [0, 3, 3010]
+    creates_path: C:\Program Files\Citrix
+  when: director_resume.changed
+
+- name: Configure Domain Login
+  script: configuredomain.ps1
+  args:
+    creates: C:\Logs\directordomain.txt
+
+- name: Configure Default Page
+  script: configuredefault.ps1
+  args:
+    creates: C:\Logs\directordefault.txt
+
+- name: Disable SSL Warning
+  script: disablesslwarn.ps1
+  args:
+    creates: C:\Logs\diablesslwarn.txt

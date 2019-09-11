@@ -1,0 +1,45 @@
+---
+- name: Install VDA Pre-Reqs
+  win_feature:
+    name:
+    - NET-Framework-45-Core
+    - Telnet-Client
+    - RDS-RD-Server
+    - Remote-Assistance
+    state: present
+  register: win_feature
+
+- name: Reboot if features require
+  win_reboot:
+  when: win_feature.reboot_required
+
+- name: Create Log Folder
+  win_file:
+    path: C:\Logs
+    state: directory
+
+- name: Install VDA Components
+  win_package:
+    path: "{{ citrix_path }}\\x64\\XenDesktop Setup\\XenDesktopVdaSetup.exe"
+    arguments: /quiet /optimize /components vda /controllers '{{ hostvars[groups['ddc.0'][0]]['ansible_hostname'] }},{{ hostvars[groups['ddc.1'][0]]['ansible_hostname'] }}' /enable_remote_assistance /enable_hdx_ports /enable_real_time_transport /virtualmachine /noreboot /noresume /logpath 'C:\Logs' /masterimage
+    state: present
+    expected_return_code: [0, 3, 3010]
+    creates_path: C:\Program Files\Citrix\Virtual Desktop Agent
+  register: ddc_install
+
+- name: Reboot after VDA
+  win_reboot:
+  when: ddc_install.changed
+
+- name: Resume VDA Install
+  win_package:
+    path: C:\ProgramData\Citrix\XenDesktopSetup\XenDesktopVdaSetup.exe
+    state: present
+    expected_return_code: [0, 3, 3010]
+    creates_path: C:\Program Files\Citrix\Virtual Desktop Agent
+  when: ddc_install.changed
+  register: ddc_resume
+
+- name: Reboot after vda install
+  win_reboot:
+  when: ddc_resume.changed

@@ -1,0 +1,52 @@
+---
+- name: Install DDC Pre-Reqs
+  win_feature:
+    name:
+    - NET-Framework-45-Core
+    - GPMC
+    - RSAT-ADDS-Tools
+    - RDS-Licensing-UI
+    - WAS
+    - Telnet-Client
+    state: present
+  register: win_feature
+
+- name: Reboot if features require
+  win_reboot:
+  when: win_feature.reboot_required
+
+- name: Create Log Folder
+  win_file:
+    path: C:\Logs
+    state: directory
+
+- name: Install DDC Components
+  win_package:
+    path: "{{ citrix_path }}\\x64\\XenDesktop Setup\\XenDesktopServerSetup.exe"
+    #arguments: /components controller,desktopstudio /configure_firewall /nosql /noreboot /quiet /logpath C:\Logs /IGNORE_HW_CHECK_FAILURE
+    arguments: /components controller,desktopstudio /configure_firewall /nosql /noreboot /quiet /logpath C:\Logs
+    state: present
+    expected_return_code: [0, 3, 3010]
+    creates_path: C:\Program Files\Citrix\Desktop Studio
+  register: ddc_install
+
+- name: Reboot after DDC
+  win_reboot:
+  when: ddc_install.changed
+
+- name: Remove DDC RunOnce Key
+  win_regedit:
+    path: HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce
+    name: "!XenDesktopSetup"
+    state: absent
+  register: ddc_resume
+
+- name: Resume DDC Install
+  win_package:
+    path: C:\ProgramData\Citrix\XenDesktopSetup\XenDesktopServerSetup.exe
+    state: present
+    expected_return_code: [0, 3, 3010]
+    creates_path: C:\Program Files\Citrix\Desktop Studio
+  when: ddc_resume.changed
+
+

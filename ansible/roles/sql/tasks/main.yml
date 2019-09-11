@@ -1,0 +1,32 @@
+---
+- name: Install SQL Pre-Reqs
+  win_feature:
+    name:
+      - NET-Framework-Core
+      - NET-Framework-Features
+      - NET-Framework-45-Features
+      - NET-Framework-45-Core
+      - NET-Framework-45-ASPNET
+    state: present
+  register: win_feature
+
+- name: Reboot if features require
+  win_reboot:
+  when: win_feature.reboot_required
+
+- name: Install SQL Components
+  win_package:
+    path: "{{ sql_path }}\\setup.exe"
+    arguments: /q /ACTION=Install /FEATURES=SQL /INSTANCENAME=MSSQLSERVER /SQLSVCACCOUNT="{{ sql_svc_account }}" /SQLSVCPASSWORD="{{ sql_svc_password }}" /SQLSYSADMINACCOUNTS="{{ sql_admins }}" /AGTSVCACCOUNT="NT AUTHORITY\Network Service" /SQLSVCINSTANTFILEINIT="True" /IACCEPTSQLSERVERLICENSETERMS /UpdateEnabled=0
+    state: present
+    creates_path: C:\Program Files\Microsoft SQL Server
+  register: sql_install
+
+- name: Reboot after SQL
+  win_reboot:
+  when: sql_install.changed
+
+- name: Install SQL Management
+  win_chocolatey:
+    name: sql-server-management-studio
+    state: present

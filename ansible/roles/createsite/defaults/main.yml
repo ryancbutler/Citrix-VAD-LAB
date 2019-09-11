@@ -1,0 +1,28 @@
+# The name of your XenDesktop site. For example: "MySite".
+SiteName: MyTestSite
+# The name of your SQL server or SQL server instance (e.g. "SQLServer1.mycompany.com" or "SQLCTX01.mycompany.com\InStance1").
+DatabaseServer: "sql-lab-01"
+# The SQL port number (1433 by default)
+DatabaseServerPort: 1433
+# The name for the site database. For example: "CTX_Site_DB".
+DatabaseName_Site: CTX_Site_DB
+# The name for the logging database. For example: "CTX_Logging_DB".
+DatabaseName_Logging: CTX_Logging_DB
+# The name for the monitoring database. For example: "CTX_Monitoring_DB".
+DatabaseName_Monitoring: CTX_Monitoring_DB
+# The port number for the initial contact, for example 27000 (this is the default value)
+LicenseServerPort: 27000
+# The licensing model. Possible values are UserDevice and Concurrent.
+LicensingModel: UserDevice
+# The product code. Possible values are XDT (for XenDesktop) or MPS (for the XenDesktop 7.x App Edition).                         
+ProductCode: XDT
+#The product edition. Possible values are STD (Standard), ENT (Enterprise) or PLT (Platinum).                                     
+ProductEdition: PLT
+# The name of the Active Directory user or group, for example "MyDomain\CTXAdmins".
+AdminGroup: mydomain\domain admins
+# The role to assign to the new XenDesktop administrator. The following built-in roles are available
+Role: Full Administrator
+# The scope (the objects) to which the permissions (defined in the role) apply                      
+Scope: All
+# The number of days you want to monitoring data to be saved in the database, for example 365 days.                                                    
+GroomingDays: 365 

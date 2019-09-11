@@ -1,0 +1,37 @@
+---
+- name: Install License Pre-Reqs
+  win_feature:
+    name:
+      - NET-Framework-Core
+      - NET-Framework-Features
+      - NET-Framework-45-Features
+      - NET-Framework-45-Core
+      - NET-Framework-45-ASPNET
+    state: present
+  register: win_feature
+
+- name: Reboot if features require
+  win_reboot:
+  when: win_feature.reboot_required
+
+- name: Install License Server
+  win_package:
+    path: "{{ citrix_path }}\\x64\\Licensing\\CTX_Licensing.msi"
+    state: present
+
+- name: Install License PowerShell Snapins
+  win_package:
+    path: "{{ citrix_path }}\\x64\\Licensing\\LicensingAdmin_PowerShellSnapin_x64.msi"
+    state: present
+  register: lic_install
+
+- name: Install license file
+  win_copy:
+    src: "{{ item }}"
+    dest: C:\Program Files (x86)\Citrix\Licensing\MyFiles\
+  with_fileglob:
+    - "*.lic"
+
+- name: Reboot after License Server
+  win_reboot:
+  when: lic_install.changed

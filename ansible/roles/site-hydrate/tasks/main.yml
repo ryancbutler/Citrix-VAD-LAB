@@ -1,0 +1,10 @@
+---
+- name: Hydrate Site
+  script: hydrate.ps1
+  args:
+    creates: C:\Logs\done-hydrate.txt
+  environment:
+    vdahostname: "{{ hostvars[groups['vda'][0]]['ansible_hostname'] }}"
+    cvad_machinecatalog: "{{ cvad_machinecatalog }}"
+    cvad_deliverygroup: "{{ cvad_deliverygroup }}"
+    cvad_desktop: "{{ cvad_desktop }}"

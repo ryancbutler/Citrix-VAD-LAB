@@ -1,0 +1,15 @@
+---
+- name: Disable Domain firewall
+  win_firewall:
+    state: disabled
+    profiles:
+    - Domain
+# - name: Enable Local Administrator
+#   win_user:
+#     name: administrator
+#     account_disabled: no
+#     password_never_expires: yes
+# - name: Disable packer account expiration
+#   win_user:
+#     name: packer
+#     password_never_expires: yes

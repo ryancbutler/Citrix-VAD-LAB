@@ -1,0 +1,35 @@
+ansible_connection: winrm
+ansible_winrm_transport: credssp
+
+#Domain account to connect VIA winrm. (Must be domain account with admin permissions)
+ansible_user: myadminaccount@mydomain.com
+ansible_password: mysupersecret
+
+ansible_winrm_server_cert_validation: ignore
+ansible_port: 5986
+ansible_become: false
+
+#Media locations (do not include trailing \)
+citrix_path: \\mynas\isos\Citrix\Citrix_Virtual_Apps_and_Desktops_7_1906_2
+sql_path: \\mynas\isos\Microsoft\SQL\en_sql_server_2017_standard_x64_dvd_11294407
+
+#Admin Group to add to CVAD site
+AdminGroup: mydomain\domain admins
+
+#Storefront URL
+HostbaseUrl: http://mycitrixlab.lab.local
+
+#Netscaler Gateway URL
+GatewayUrl: https://mycitrix.ryancbutler.com
+
+#SQL service account
+sql_svc_account: mydomain\sql_svc
+sql_svc_password: mysvcpassword
+
+#SQL Admins
+sql_admins: mydomain\sqladmins
+
+#Apply Windows Updates
+apply_win_updates: false
+
+

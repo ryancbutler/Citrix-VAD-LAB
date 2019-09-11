@@ -1,0 +1,7 @@
+HostbaseUrl: http://mycitrixlab.mydomain.com
+FarmServers: "{{ hostvars[groups['ddc.0'][0]]['ansible_fqdn'] }},{{ hostvars[groups['ddc.1'][0]]['ansible_fqdn'] }}"
+StoreVirtualPath: /Citrix/Store
+TransportType: HTTP
+GatewayUrl: https://mycitrix.myexternal.com
+GatewaySTAUrls: http://{{ hostvars[groups['ddc.0'][0]]['ansible_fqdn'] }}/scripts/ctxa.dll,http://{{ hostvars[groups['ddc.1'][0]]['ansible_fqdn'] }}/scripts/ctxa.dll
+GatewayName: NSG1

@@ -1,0 +1,63 @@
+---
+- hosts: all
+  roles:
+   - enablerdp
+   - base
+
+- hosts: ddc
+  roles:
+   - ddc
+   - director
+
+- hosts: storefront
+  roles:
+   - storefront
+
+- hosts: sql
+  roles:
+   - sql
+   - license
+
+- hosts: ddc.0
+  roles:
+    - createsite
+
+- hosts: ddc.1
+  roles:
+    - createsite
+
+- hosts: storefront.0
+  roles:
+    - storefront-init
+
+- hosts: storefront.1
+  roles:
+    - storefront-join
+
+- hosts: vda
+  roles:
+    - vda
+
+- hosts: ddc.0
+  gather_facts: no
+  roles:
+    - site-hydrate
+
+- hosts: all
+  gather_facts: no
+  tasks:
+    - name: Install Windows updates
+      win_updates:
+         category_names:
+            - SecurityUpdates
+            - CriticalUpdates
+            - UpdateRollups
+            - DefinitionUpdates
+            - Updates
+         reboot: yes
+         reboot_timeout: 3600
+      register: win_update
+      when: apply_win_updates == true
+    - name: Reboot if updates require
+      win_reboot:
+      when: win_update.changed
