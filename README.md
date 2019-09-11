@@ -30,11 +30,12 @@ Deploys the following:
  - Configures Storefromt
    - Adds Citrix Gateway
    - Sets default page
-   - Enables loopback for SSL offload
+   - Enables HTTP loopback for SSL offload
    - Adjusts logoff behavior
 
 ### SQL and license
  - Installs SQL and license server
+ - Installs SQL management tools
  - Configures SQL for admins and service account
  - Copies Citrix license files
 
