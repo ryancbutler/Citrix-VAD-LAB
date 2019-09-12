@@ -217,11 +217,11 @@ resource "vsphere_virtual_machine" "vda" {
   }
 }
 
-terraform {
-  backend "remote" {
-    organization = "TechDrabble"
-    workspaces {
-      name = "cvad-lab"
-    }
-  }
-}
+# terraform {
+#   backend "remote" {
+#     organization = "TechDrabble"
+#     workspaces {
+#       name = "cvad-lab"
+#     }
+#   }
+# }

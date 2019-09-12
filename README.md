@@ -68,7 +68,7 @@ I used [Ubuntu WSL](https://docs.microsoft.com/en-us/windows/wsl/install-win10) 
 1. I used Windows Server 2019 but I assume 2016 should also work.
 2. WinRM needs to be configured and **CredSSP** enabled
     - Ansible provides a great script to enable quickly https://github.com/ansible/ansible/blob/devel/examples/scripts/ConfigureRemotingForAnsible.ps1
-3. I use linked clones to quickly deploy.  In order for this to work the template needs to be converted to a VM with a **single snapshot** available.
+3. I use linked clones to quickly deploy.  In order for this to work the template needs to be converted to a VM with a **single snapshot** created.
 
 ## Getting Started
 
