@@ -60,7 +60,7 @@ I used [Ubuntu WSL](https://docs.microsoft.com/en-us/windows/wsl/install-win10) 
 2. [Terraform installed](https://askubuntu.com/questions/983351/how-to-install-terraform-in-ubuntu)
 3. [Terraform-Inventory](https://github.com/adammck/terraform-inventory/releases) installed in path.  This is used for the Ansible inventory
     - I copied to */usr/bin/*
-4. (If using remote state)[Configure Access for the Terraform CLI](https://www.terraform.io/docs/cloud/free/index.html#configure-access-for-the-terraform-cli) 
+4. (If using remote state)[Configure Access for the Terraform CLI](https://www.terraform.io/docs/cloud/free/index.html#configure-access-for-the-terraform-cli)
 5. This REPO cloned down
 
 ### vCenter Windows Server Template
@@ -77,6 +77,16 @@ I used [Ubuntu WSL](https://docs.microsoft.com/en-us/windows/wsl/install-win10) 
 2. Adjust variables to reflect vCenter environment
 3. Review **main.tf** and adjust any VM resources if needed
 4. (If using remote cloud state) At the bottom of **main.tf** uncomment the *terraform* section and edit the *organization* and *workspaces* fields
+```
+terraform {
+   backend "remote" {
+     organization = "TechDrabble"
+     workspaces {
+       name = "cvad-lab"
+     }
+   }
+}
+```
 5. run `terraform init` to install needed provider
 
 ### Ansible
