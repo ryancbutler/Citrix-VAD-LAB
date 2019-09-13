@@ -100,6 +100,12 @@ terraform {
 If you are comfortable with below process `build.sh` handles the below steps.  
 
 **Note:** If you prefer to run many of the tasks asynchronously switch the `ansible-playbook` lines within `build.sh` which will call a seperate playbook. This is faster but can consume more resources and less informative output.
+```
+#Sync
+#ansible-playbook --inventory-file=/usr/bin/terraform-inventory ./ansible/playbook.yml -e @./ansible/vars.yml
+#If you prefer to run most of the tasks async (can increase resources)
+ansible-playbook --inventory-file=/usr/bin/terraform-inventory ./ansible/playbook-async.yml -e @./ansible/vars.yml
+```
 
 ## Terraform
 1. From the *terraform* directory run `terraform apply --var-file="lab.tfvars"`
