@@ -20,10 +20,10 @@
       include_role:
         name: sql
       when: "'sql' in group_names"
-    - name: License Install
+    - name: License Server Install
       include_role:
-        name: sql
-      when: "'license' in group_names"
+        name: license
+      when: "'sql' in group_names"
     - name: Install VDA
       include_role:
           name: vda
