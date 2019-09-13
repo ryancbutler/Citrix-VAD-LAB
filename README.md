@@ -95,7 +95,9 @@ terraform {
 3. If you want to license CVAD environment place generated license file in **ansible\roles\license\files**
 
 ## Deploy
-If you are comfortable with below process `build.sh` handles the below steps
+If you are comfortable with below process `build.sh` handles the below steps.  
+
+**Note:** If you prefer to run many of the tasks asynchronously switch the `ansible-playbook` lines within `build.sh` which will call a seperate playbook. This is faster but can consume more resources and less informative output.
 
 ## Terraform
 1. From the *terraform* directory run `terraform apply --var-file="lab.tfvars"`
@@ -104,7 +106,10 @@ If you are comfortable with below process `build.sh` handles the below steps
 ## Ansible
 1. From the *root* directory and the terraform deployment is completed run the following
     - `export TF_STATE=./terraform` used for the inventory script
-    - `ansible-playbook --inventory-file=/usr/bin/terraform-inventory ./ansible/playbook.yml -e @./ansible/vars.yml` to start the playbook
+    - Synchronous run (Serial tasks)
+        - `ansible-playbook --inventory-file=/usr/bin/terraform-inventory ./ansible/playbook.yml -e @./ansible/vars.yml` to start the playbook
+    - Asynchronous run (Parallel tasks)
+        - `ansible-playbook --inventory-file=/usr/bin/terraform-inventory ./ansible/playbook-async.yml -e @./ansible/vars.yml` to start the playbook
     - Grab coffee
 
 ## Destroy

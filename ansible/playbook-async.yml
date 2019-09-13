@@ -1,0 +1,71 @@
+---
+- hosts: all
+  strategy: free
+  roles:
+   - enablerdp
+   - base
+
+- hosts: all
+  strategy: free
+  tasks:
+    - name: DDC Install
+      include_role:
+        name: ddc
+      when: "'ddc' in group_names"
+    - name: Storefront Install
+      include_role:
+        name: storefront
+      when: "'storefront' in group_names"
+    - name: SQL Install
+      include_role:
+        name: sql
+      when: "'sql' in group_names"
+    - name: License Install
+      include_role:
+        name: sql
+      when: "'license' in group_names"
+    - name: Install VDA
+      include_role:
+          name: vda
+      when: "'vda' in group_names"
+    
+- hosts: ddc.0
+  roles:
+    - createsite
+
+- hosts: ddc.1
+  roles:
+    - createsite
+
+- hosts: storefront.0
+  roles:
+    - storefront-init
+
+- hosts: storefront.1
+  roles:
+    - storefront-join
+
+- hosts: ddc.0
+  gather_facts: no
+  roles:
+    - site-hydrate
+
+- hosts: all
+  gather_facts: no
+  strategy: free
+  tasks:
+    - name: Install Windows updates
+      win_updates:
+         category_names:
+            - SecurityUpdates
+            - CriticalUpdates
+            - UpdateRollups
+            - DefinitionUpdates
+            - Updates
+         reboot: yes
+         reboot_timeout: 3600
+      register: win_update
+      when: apply_win_updates == true
+    - name: Reboot if updates require
+      win_reboot:
+      when: win_update.changed
