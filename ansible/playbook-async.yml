@@ -20,15 +20,15 @@
       include_role:
         name: sql
       when: "'sql' in group_names"
-    - name: License Server Install
-      include_role:
-        name: license
-      when: "'sql' in group_names"
     - name: Install VDA
       include_role:
           name: vda
       when: "'vda' in group_names"
     
+- hosts: sql
+  roles:
+   - license
+
 - hosts: ddc.0
   roles:
     - createsite
