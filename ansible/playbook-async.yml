@@ -1,13 +1,13 @@
 ---
 - hosts: all
   strategy: free
-  roles:
-   - enablerdp
-   - base
-
-- hosts: all
-  strategy: free
   tasks:
+    - name: Enable RDP
+      include_role:
+        name: enablerdp
+    - name: Base Config
+      include_role:
+        name: base
     - name: DDC Install
       include_role:
         name: ddc
@@ -24,11 +24,11 @@
       include_role:
           name: vda
       when: "'vda' in group_names"
+    - name: Install License Server
+      include_role:
+          name: license
+      when: "'sql' in group_names"
     
-- hosts: sql
-  roles:
-   - license
-
 - hosts: ddc.0
   roles:
     - createsite
