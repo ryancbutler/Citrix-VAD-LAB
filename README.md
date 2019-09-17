@@ -33,7 +33,7 @@ Deploys the following:
    - Enables HTTP loopback for SSL offload
    - Adjusts logoff behavior
 
-### SQL and license
+### SQL and Citrix License
  - Installs SQL and license server
  - Installs SQL management tools
  - Configures SQL for admins and service account
