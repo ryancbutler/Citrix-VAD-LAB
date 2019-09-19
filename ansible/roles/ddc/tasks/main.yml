@@ -23,7 +23,7 @@
 - name: Install DDC Components
   win_package:
     path: "{{ citrix_path }}\\x64\\XenDesktop Setup\\XenDesktopServerSetup.exe"
-    #arguments: /components controller,desktopstudio /configure_firewall /nosql /noreboot /quiet /logpath C:\Logs /IGNORE_HW_CHECK_FAILURE
+    #USE FOR 1909 arguments: /components controller,desktopstudio /configure_firewall /nosql /noreboot /quiet /logpath C:\Logs /IGNORE_HW_CHECK_FAILURE
     arguments: /components controller,desktopstudio /configure_firewall /nosql /noreboot /quiet /logpath C:\Logs
     state: present
     expected_return_code: [0, 3, 3010]
