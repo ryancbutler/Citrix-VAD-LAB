@@ -77,6 +77,7 @@
         arguments: /components storefront /configure_firewall /noreboot /quiet /logpath C:\Logs
         state: present
         expected_return_code: [0, 3, 4, 3010]
+        creates_path: C:\ProgramData\Citrix\Storefront Install
       register: sf_install
 
 - name: Reboot after Storefront

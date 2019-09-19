@@ -16,14 +16,25 @@
     state: directory
 
 - name: Install Director Components
-  win_package:
-    path: "{{ citrix_path }}\\x64\\XenDesktop Setup\\XenDesktopServerSetup.exe"
-    #arguments: /components controller,desktopstudio /configure_firewall /nosql /noreboot /quiet /logpath C:\Logs /IGNORE_HW_CHECK_FAILURE
-    arguments: /components desktopdirector /configure_firewall /nosql /noreboot /quiet /logpath C:\Logs
-    state: present
-    expected_return_code: [0, 3, 3010]
-    creates_path: C:\inetpub\wwwroot\Director
-  register: director_install
+  block:
+    - win_package:
+        path: "{{ citrix_path }}\\x64\\XenDesktop Setup\\XenDesktopServerSetup.exe"
+        arguments: /components desktopdirector /configure_firewall /nosql /noreboot /quiet /logpath C:\Logs
+        state: present
+        expected_return_code: [0, 3, 3010]
+        creates_path: C:\inetpub\wwwroot\Director
+      register: director_install
+  rescue:
+    - debug:
+          msg: 'Going to reboot and try again'
+    - win_reboot:
+    - win_package:
+        path: "{{ citrix_path }}\\x64\\XenDesktop Setup\\XenDesktopServerSetup.exe"
+        arguments: /components desktopdirector /configure_firewall /nosql /noreboot /quiet /logpath C:\Logs
+        state: present
+        expected_return_code: [0, 3, 3010]
+        creates_path: C:\inetpub\wwwroot\Director
+      register: director_install
 
 - name: Reboot after Director
   win_reboot:
@@ -53,6 +64,8 @@
   script: configuredefault.ps1
   args:
     creates: C:\Logs\directordefault.txt
+  environment:
+    DirectorUrl: "{{ DirectorUrl }}"
 
 - name: Disable SSL Warning
   script: disablesslwarn.ps1
