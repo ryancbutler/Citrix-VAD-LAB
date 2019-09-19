@@ -12,6 +12,10 @@
       include_role:
         name: ddc
       when: "'ddc' in group_names"
+    - name: Director Install
+      include_role:
+        name: director
+      when: "'ddc' in group_names"
     - name: Storefront Install
       include_role:
         name: storefront
