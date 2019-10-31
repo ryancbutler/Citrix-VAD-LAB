@@ -24,7 +24,7 @@
     arguments: /quiet /optimize /components vda /controllers '{{ hostvars[groups['ddc.0'][0]]['ansible_hostname'] }},{{ hostvars[groups['ddc.1'][0]]['ansible_hostname'] }}' /enable_remote_assistance /enable_hdx_ports /enable_real_time_transport /virtualmachine /noreboot /noresume /logpath 'C:\Logs' /masterimage
     state: present
     expected_return_code: [0, 3, 3010]
-    creates_path: C:\Program Files\Citrix\Virtual Desktop Agent
+    creates_service: BrokerAgent
   register: ddc_install
 
 - name: Reboot after VDA
@@ -36,7 +36,7 @@
     path: C:\ProgramData\Citrix\XenDesktopSetup\XenDesktopVdaSetup.exe
     state: present
     expected_return_code: [0, 3, 3010]
-    creates_path: C:\Program Files\Citrix\Virtual Desktop Agent
+    creates_service: BrokerAgent
   when: ddc_install.changed
   register: ddc_resume
 

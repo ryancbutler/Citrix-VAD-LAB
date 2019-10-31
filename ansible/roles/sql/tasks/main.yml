@@ -19,7 +19,7 @@
     path: "{{ sql_path }}\\setup.exe"
     arguments: /q /ACTION=Install /FEATURES=SQL /INSTANCENAME=MSSQLSERVER /SQLSVCACCOUNT="{{ sql_svc_account }}" /SQLSVCPASSWORD="{{ sql_svc_password }}" /SQLSYSADMINACCOUNTS="{{ sql_admins }}" /AGTSVCACCOUNT="NT AUTHORITY\Network Service" /SQLSVCINSTANTFILEINIT="True" /IACCEPTSQLSERVERLICENSETERMS /UpdateEnabled=0
     state: present
-    creates_path: C:\Program Files\Microsoft SQL Server
+    creates_service: MSSQLSERVER
   register: sql_install
 
 - name: Reboot after SQL
