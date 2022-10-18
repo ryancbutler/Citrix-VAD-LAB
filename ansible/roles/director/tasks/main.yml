@@ -64,8 +64,6 @@
   script: configuredefault.ps1
   args:
     creates: C:\Logs\directordefault.txt
-  environment:
-    DirectorUrl: "{{ DirectorUrl }}"
 
 - name: Disable SSL Warning
   script: disablesslwarn.ps1
