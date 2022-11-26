@@ -62,7 +62,9 @@
 - name: Install Storefront Components
   block:
     - win_package:
-        path: "{{ citrix_path }}\\x64\\XenDesktop Setup\\XenDesktopServerSetup.exe"
+        #path: "{{ citrix_path }}\\x64\\XenDesktop Setup\\XenDesktopServerSetup.exe"
+        # Change Install Folder => https://support.citrix.com/article/CTX207667/to-install-storefront-using-command-prompt
+        path: "{{ citrix_path }}\\x64\\Storefront\\CitrixStoreFront-x64.exe"
         arguments: /components storefront /configure_firewall /noreboot /quiet /logpath C:\Logs
         state: present
         expected_return_code: [0, 3, 4, 3010]
@@ -73,7 +75,9 @@
           msg: 'Going to reboot and try again'
     - win_reboot:
     - win_package:
-        path: "{{ citrix_path }}\\x64\\XenDesktop Setup\\XenDesktopServerSetup.exe"
+        #path: "{{ citrix_path }}\\x64\\XenDesktop Setup\\XenDesktopServerSetup.exe"
+        # Change Install Folder => https://support.citrix.com/article/CTX207667/to-install-storefront-using-command-prompt
+        path: "{{ citrix_path }}\\x64\\Storefront\\CitrixStoreFront-x64.exe"
         arguments: /components storefront /configure_firewall /noreboot /quiet /logpath C:\Logs
         state: present
         expected_return_code: [0, 3, 4, 3010]
