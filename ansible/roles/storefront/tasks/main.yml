@@ -65,7 +65,7 @@
         #path: "{{ citrix_path }}\\x64\\XenDesktop Setup\\XenDesktopServerSetup.exe"
         # Change Install Folder => https://support.citrix.com/article/CTX207667/to-install-storefront-using-command-prompt
         path: "{{ citrix_path }}\\x64\\Storefront\\CitrixStoreFront-x64.exe"
-        arguments: /components storefront /configure_firewall /noreboot /quiet /logpath C:\Logs
+        arguments: -silent -L*v C:\Logs
         state: present
         expected_return_code: [0, 3, 4, 3010]
         creates_path: C:\ProgramData\Citrix\Storefront Install
@@ -78,7 +78,7 @@
         #path: "{{ citrix_path }}\\x64\\XenDesktop Setup\\XenDesktopServerSetup.exe"
         # Change Install Folder => https://support.citrix.com/article/CTX207667/to-install-storefront-using-command-prompt
         path: "{{ citrix_path }}\\x64\\Storefront\\CitrixStoreFront-x64.exe"
-        arguments: /components storefront /configure_firewall /noreboot /quiet /logpath C:\Logs
+        arguments: -silent -L*v C:\Logs
         state: present
         expected_return_code: [0, 3, 4, 3010]
         creates_path: C:\ProgramData\Citrix\Storefront Install
